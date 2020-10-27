@@ -13,7 +13,7 @@ let transactions = localStorage.getItem('transactions') !== null
 
 // Add Transaction
 function addTrans(e) {
-    e.preventDefualt()
+    e.preventDefault()
 
     if (text.value.trim() === '' || amount.value.trim() === '') {
         alert(`Please fill in the text and number feild's`)
@@ -23,11 +23,14 @@ function addTrans(e) {
             text: text.value,
             amount: +amount.value
         }
+        transactions.push(transaction)
+        addTransList(transaction)
+        updateValues()
+        updateLocalStorage()
+
+        text.value = ''
+        amount.value = ''
     }
-    transactions.push(transaction)
-    addTransList()
-    updateValues()
-    updateLocalStorage()
 }
 // Genterate ID
 function generateId() {
@@ -52,8 +55,8 @@ function addTransList(transaction) {
 function updateValues() {
     const amounts = transactions.map(transaction => transaction.amount)
     const total = amounts.reduce((acc, itm) => (acc += itm), 0).toFixed(2)
-    const income = amounts.filter(item => itm > 0).reduce((acc, itm) => (acc += itm), 0).toFixed(2)
-    const expense = (amount.filter(item => itm < 0).reduce((acc, itm) => (acc += itm), 0) * -1).toFixed(2)
+    const income = amounts.filter(itm => itm > 0).reduce((acc, itm) => (acc += itm), 0).toFixed(2)
+    const expense = (amounts.filter(itm => itm < 0).reduce((acc, itm) => (acc += itm), 0) * -1).toFixed(2)
 
     balance.innerText = `$${total}`
     money_plus.innerText = `$${income}`
@@ -65,6 +68,7 @@ function removeItem(id) {
     transactions = transactions.filter(transaction => transaction.id !== id)
 
     updateLocalStorage()
+    init()
 }
 
 // Update localStorage
@@ -80,4 +84,4 @@ function init() {
 }
 
 // Add trasaction 
-form.addEventListener('submit', addTrans())
+form.addEventListener('submit', addTrans)
